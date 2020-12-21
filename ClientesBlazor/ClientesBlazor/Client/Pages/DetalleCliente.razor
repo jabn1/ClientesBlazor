@@ -58,14 +58,14 @@ else
                         <td>@articulo.Nombre</td>
                         <td>@articulo.Codigo</td>
                         <td>@articulo.Precio</td>
-                        <td><button type="button" class="btn btn-danger">Eliminar</button></td>
+                        <td><button type="button" class="btn btn-danger" @onclick="() => DeleteArticulo(articulo.Id)">Eliminar</button></td>
                     </tr>
                 }
             </tbody>
         </table>
     }
 
-    <button type="button" class="btn btn-light" @onclick="CollapsedChange"><h3>Agregar Articulos</h3></button>
+    <button type="button" class="btn btn-light" @onclick="CollapsedChange"><h4>Agregar Articulos</h4></button>
     <br />
     @if (collapsed == true)
     {
@@ -130,6 +130,16 @@ else
         if (result.IsSuccessStatusCode)
         {
             cliente.Articulos.Add(Articulos.FirstOrDefault(a => a.Id == idArticulo));
+        }
+    }
+
+    private async Task DeleteArticulo(int idArticulo)
+    {
+        var result = await Http.DeleteAsync($"api/clientes/articulo/{Uri.EscapeDataString(id)}/{Uri.EscapeDataString(idArticulo.ToString())}");
+
+        if (result.IsSuccessStatusCode)
+        {
+            cliente.Articulos.RemoveAll(a => a.Id == idArticulo);
         }
     }
 
