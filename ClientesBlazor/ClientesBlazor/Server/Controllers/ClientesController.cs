@@ -108,24 +108,20 @@ namespace ClientesBlazor.Server.Controllers
             return articulosDTO;
         }
 
-        [HttpPost("articulos/{idcliente}")]
-        public async Task<ActionResult> AddArticulosToCliente(List<int> idArticulos, int idcliente)
+        [HttpPost("articulo/{idcliente}/{idarticulo}")]
+        public async Task<ActionResult> AddArticuloToCliente(int idarticulo, int idcliente)
         {
-            if (idArticulos == null) return StatusCode(StatusCodes.Status400BadRequest, "Invalid parameters");
             var articulos = new List<TblArticulo>();
-            foreach (var idArticulo in idArticulos)
-            {
-                var articulo = await context.TblArticulos.FindAsync(idArticulo);
-                if (articulo == null) return StatusCode(StatusCodes.Status400BadRequest, "Invalid parameters");
-                articulos.Add(articulo);
-            }
+
+            var articulo = await context.TblArticulos.FindAsync(idarticulo);
+            if (articulo == null) return StatusCode(StatusCodes.Status400BadRequest, "Invalid parameters");
+            articulos.Add(articulo);
+
             var cliente = await context.TblClientes.FindAsync(idcliente);
             if (cliente == null) return StatusCode(StatusCodes.Status400BadRequest, "Invalid parameters");
 
-            foreach (var articulo in articulos)
-            {
-                cliente.TblClienteArticulos.Add(new TblClienteArticulo() { IdArticuloNavigation = articulo });
-            }
+
+            cliente.TblClienteArticulos.Add(new TblClienteArticulo() { IdArticuloNavigation = articulo });
 
             if (await context.SaveChangesAsync() == 0) return StatusCode(StatusCodes.Status400BadRequest, "Failed to add articulos to cliente");
 

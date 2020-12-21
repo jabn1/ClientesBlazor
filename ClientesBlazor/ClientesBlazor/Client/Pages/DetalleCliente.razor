@@ -1,0 +1,114 @@
+﻿@page "/cliente/{id}"
+@inject HttpClient Http
+
+<h1>Detalle de Cliente</h1>
+@if (cliente == null || articulos == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <tbody>
+            <tr>
+                <td><strong>Id:</strong></td>
+                <td>@cliente.Id</td>
+            </tr>
+            <tr>
+                <td><strong>Nombre:</strong></td>
+                <td>@cliente.Nombre</td>
+            </tr>
+            <tr>
+                <td><strong>RNC:</strong></td>
+                <td>@cliente.Rnc</td>
+            </tr>
+            <tr>
+                <td><strong>Grupo:</strong></td>
+                <td>@cliente.Grupo</td>
+            </tr>
+            <tr>
+                <td><strong>Pais:</strong></td>
+                <td>@cliente.Pais</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Articulos</h2>
+    @if (cliente.Articulos.Count == 0)
+    {
+        <p><em>No hay articulos asociados a este cliente.</em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Codigo</th>
+                    <th>Precio</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var articulo in cliente.Articulos)
+                {
+                    <tr>
+                        <td>@articulo.Id</td>
+                        <td>@articulo.Nombre</td>
+                        <td>@articulo.Codigo</td>
+                        <td>@articulo.Precio</td>
+                        <td><button type="button" class="btn btn-danger">Eliminar</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    @if (articulos.Count() == 0)
+    {
+        <p><em>No hay articulos disponibles para agregar.</em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Codigo</th>
+                    <th>Precio</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var articulo in cliente.Articulos)
+                {
+                    <tr>
+                        <td>@articulo.Id</td>
+                        <td>@articulo.Nombre</td>
+                        <td>@articulo.Codigo</td>
+                        <td>@articulo.Precio</td>
+                        <td><button type="button" class="btn btn-primary">Agregar</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+}
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+
+    private ClienteDTO cliente;
+    private ArticuloDTO[] articulos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        cliente = await Http.GetFromJsonAsync<ClienteDTO>($"api/clientes/cliente/{Uri.EscapeDataString(id)}");
+        articulos = await Http.GetFromJsonAsync<ArticuloDTO[]>($"api/clientes/articulos");
+    }
+
+
+}

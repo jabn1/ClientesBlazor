@@ -1,7 +1,52 @@
 ﻿@page "/"
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
 
-<h1>Hello, world!</h1>
+<h1>Clientes</h1>
 
-Welcome to your new app.
+@if (clientes == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>RNC</th>
+                <th>Grupo</th>
+                <th>Pais</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cliente in clientes)
+            {
+            <tr>
+                <td>@cliente.Id</td>
+                <td>@cliente.Nombre</td>
+                <td>@cliente.Rnc</td>
+                <td>@cliente.Grupo</td>
+                <td>@cliente.Pais</td>
+                <td><button type="button" class="btn btn-primary" @onclick="() => NavToDetalle(cliente.Id)">Detalle</button></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@code {
+    private ClienteDTO[] clientes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        clientes = await Http.GetFromJsonAsync<ClienteDTO[]>("api/clientes/clientes");
+    }
+
+    private void NavToDetalle(int id)
+    {
+        NavigationManager.NavigateTo($"cliente/{Uri.EscapeDataString(id.ToString())}");
+    }
+}
