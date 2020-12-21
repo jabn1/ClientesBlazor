@@ -1,1 +1,1 @@
-dotnet ef dbcontext scaffold "Server=.\SQLEXPRESS;Database=ClientesDB;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -o Entidades
+dotnet ef dbcontext scaffold Name=Connection1 Microsoft.EntityFrameworkCore.SqlServer -o Entidades -s ClientesBlazorAPI\ -p Infraestructura\

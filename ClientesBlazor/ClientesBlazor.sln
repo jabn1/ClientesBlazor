@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientesBlazorApp", "ClientesBlazorApp\ClientesBlazorApp.csproj", "{70287017-2760-41CF-B12A-FAF7D2280622}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientesBlazorApp", "ClientesBlazorApp\ClientesBlazorApp.csproj", "{70287017-2760-41CF-B12A-FAF7D2280622}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientesBlazorAPI", "ClientesBlazorAPI\ClientesBlazorAPI.csproj", "{420CAE7B-2750-47C9-85F2-ECD0857B1A18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientesBlazorAPI", "ClientesBlazorAPI\ClientesBlazorAPI.csproj", "{420CAE7B-2750-47C9-85F2-ECD0857B1A18}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infraestructura", "Infraestructura\Infraestructura.csproj", "{54AB38EB-DB4B-4C7B-8259-977353E66FCF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{420CAE7B-2750-47C9-85F2-ECD0857B1A18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{420CAE7B-2750-47C9-85F2-ECD0857B1A18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{420CAE7B-2750-47C9-85F2-ECD0857B1A18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54AB38EB-DB4B-4C7B-8259-977353E66FCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54AB38EB-DB4B-4C7B-8259-977353E66FCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54AB38EB-DB4B-4C7B-8259-977353E66FCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54AB38EB-DB4B-4C7B-8259-977353E66FCF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
