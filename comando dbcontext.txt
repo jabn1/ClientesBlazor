@@ -1,0 +1,1 @@
+dotnet ef dbcontext scaffold "Server=.\SQLEXPRESS;Database=ClientesDB;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -o Entidades
