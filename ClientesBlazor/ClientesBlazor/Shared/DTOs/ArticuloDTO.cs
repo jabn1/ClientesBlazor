@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ClientesBlazor.Server.DTOs
+namespace ClientesBlazor.Shared.DTOs
 {
     public class ArticuloDTO
     {

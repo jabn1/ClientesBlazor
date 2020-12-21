@@ -1,4 +1,4 @@
-﻿using ClientesBlazor.Server.DTOs;
+﻿using ClientesBlazor.Shared.DTOs;
 using Infraestructura.Entidades;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +27,6 @@ namespace ClientesBlazor.Server.Controllers
             var clientes = await context.TblClientes
                 .Include(g => g.IdGrupoNavigation)
                 .Include(p => p.IdPaisNavigation)
-                .Include(a => a.TblClienteArticulos).ThenInclude(a => a.IdArticuloNavigation)
                 .ToListAsync();
 
             if (clientes == null) return StatusCode(StatusCodes.Status400BadRequest, "Failed to get clientes");
@@ -35,18 +34,6 @@ namespace ClientesBlazor.Server.Controllers
             var clientesDTO = new List<ClienteDTO>();
             foreach (var cliente in clientes)
             {
-                var articulosDTO = new List<ArticuloDTO>();
-                foreach (var articulo in cliente.TblClienteArticulos)
-                {
-                    var articuloDTO = new ArticuloDTO()
-                    {
-                        Id = articulo.IdArticuloNavigation.Id,
-                        Nombre = articulo.IdArticuloNavigation.Nombre,
-                        Codigo = articulo.IdArticuloNavigation.Codigo,
-                        Precio = articulo.IdArticuloNavigation.Precio
-                    };
-                    articulosDTO.Add(articuloDTO);
-                }
                 var clienteDTO = new ClienteDTO()
                 {
                     Id = cliente.Id,
@@ -55,12 +42,49 @@ namespace ClientesBlazor.Server.Controllers
                     IdGrupo = cliente.IdGrupo,
                     Grupo = cliente.IdGrupoNavigation.Nombre,
                     Nombre = cliente.Nombre,
-                    Rnc = cliente.Rnc,
-                    Articulos = articulosDTO
+                    Rnc = cliente.Rnc
                 };
                 clientesDTO.Add(clienteDTO);
             }
             return clientesDTO;
+        }
+
+        [HttpGet("cliente/{id}")]
+        public async Task<ActionResult<ClienteDTO>> GetCliente(int id)
+        {
+            var cliente = await context.TblClientes
+                .Include(g => g.IdGrupoNavigation)
+                .Include(p => p.IdPaisNavigation)
+                .Include(a => a.TblClienteArticulos)
+                .ThenInclude(a => a.IdArticuloNavigation)
+                .FirstOrDefaultAsync(c => c.Id == id);
+            if (cliente == null) return StatusCode(StatusCodes.Status400BadRequest, "Invalid parameters");
+
+            var articulosDTO = new List<ArticuloDTO>();
+            foreach (var articulo in cliente.TblClienteArticulos)
+            {
+                var articuloDTO = new ArticuloDTO()
+                {
+                    Id = articulo.IdArticuloNavigation.Id,
+                    Nombre = articulo.IdArticuloNavigation.Nombre,
+                    Codigo = articulo.IdArticuloNavigation.Codigo,
+                    Precio = articulo.IdArticuloNavigation.Precio
+                };
+                articulosDTO.Add(articuloDTO);
+            }
+            var clienteDTO = new ClienteDTO()
+            {
+                Id = cliente.Id,
+                IdPais = cliente.IdPais,
+                Pais = cliente.IdPaisNavigation.Nombre,
+                IdGrupo = cliente.IdGrupo,
+                Grupo = cliente.IdGrupoNavigation.Nombre,
+                Nombre = cliente.Nombre,
+                Rnc = cliente.Rnc,
+                Articulos = articulosDTO
+            };
+
+            return clienteDTO;
         }
 
         [HttpGet("articulos")]

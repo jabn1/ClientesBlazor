@@ -1,0 +1,40 @@
+﻿@page "/clientes"
+@inject HttpClient Http
+
+<h1>Clientes</h1>
+
+@if (clientes == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>RNC</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cliente in clientes)
+            {
+                <tr>
+                    <td>@cliente.Id</td>
+                    <td>@cliente.Nombre</td>
+                    <td>@cliente.Rnc</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private ClienteDTO[] clientes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        clientes = await Http.GetFromJsonAsync<ClienteDTO[]>("api/clientes/clientes");
+    }
+}
