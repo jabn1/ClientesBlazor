@@ -59,11 +59,23 @@ namespace ClientesBlazorAPI.Controllers
             return clientesDTO;
         }
 
-        //[HttpGet("articulos")]
-        //public async Task<ActionResult<List<ArticuloDTO>>> GetArticulos()
-        //{
-
-        //}
+        [HttpGet("articulos")]
+        public async Task<ActionResult<List<ArticuloDTO>>> GetArticulos()
+        {
+            var articulos = await context.TblArticulos.ToListAsync();
+            var articulosDTO = new List<ArticuloDTO>();
+            foreach (var articulo in articulos)
+            {
+                articulosDTO.Add(new ArticuloDTO()
+                {
+                    Id = articulo.Id,
+                    Nombre = articulo.Nombre,
+                    Precio = articulo.Precio,
+                    Codigo = articulo.Codigo
+                });
+            }
+            return articulosDTO;
+        }
 
         //[HttpPost("articulos")]
         //public async Task<ActionResult> AddArticulosToCliente(List<int> articulos)
