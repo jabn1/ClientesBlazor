@@ -64,7 +64,14 @@ else
             </tbody>
         </table>
     }
-    @if (articulos.Count() == 0)
+
+    <button type="button" class="btn btn-light" @onclick="CollapsedChange"><h3>Agregar Articulos</h3></button>
+    <br />
+    @if (collapsed == true)
+    {
+
+    }
+    else if (articulos.Count() == 0)
     {
         <p><em>No hay articulos disponibles para agregar.</em></p>
     }
@@ -81,14 +88,14 @@ else
                 </tr>
             </thead>
             <tbody>
-                @foreach (var articulo in cliente.Articulos)
+                @foreach (var articulo in Articulos)
                 {
                     <tr>
                         <td>@articulo.Id</td>
                         <td>@articulo.Nombre</td>
                         <td>@articulo.Codigo</td>
                         <td>@articulo.Precio</td>
-                        <td><button type="button" class="btn btn-primary">Agregar</button></td>
+                        <td><button type="button" class="btn btn-primary" @onclick="() => AddArticulo(articulo.Id)">Agregar</button></td>
                     </tr>
                 }
             </tbody>
@@ -103,12 +110,36 @@ else
 
     private ClienteDTO cliente;
     private ArticuloDTO[] articulos;
+    private bool collapsed = true;
 
     protected override async Task OnInitializedAsync()
     {
         cliente = await Http.GetFromJsonAsync<ClienteDTO>($"api/clientes/cliente/{Uri.EscapeDataString(id)}");
         articulos = await Http.GetFromJsonAsync<ArticuloDTO[]>($"api/clientes/articulos");
     }
+    private void CollapsedChange()
+    {
+        if (collapsed) collapsed = false;
+        else collapsed = true;
+    }
 
+    private async Task AddArticulo(int idArticulo)
+    {
+        var result = await Http.PostAsync($"api/clientes/articulo/{Uri.EscapeDataString(id)}/{Uri.EscapeDataString(idArticulo.ToString())}", null);
+
+        if (result.IsSuccessStatusCode)
+        {
+            cliente.Articulos.Add(Articulos.FirstOrDefault(a => a.Id == idArticulo));
+        }
+    }
+
+    public List<ArticuloDTO> Articulos
+    {
+        get {
+            var excludedIDs = new HashSet<int>(cliente.Articulos.Select(p => p.Id));
+            var result = articulos.Where(p => !excludedIDs.Contains(p.Id));
+            return result.ToList(); }
+
+    }
 
 }
