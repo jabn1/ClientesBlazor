@@ -106,10 +106,24 @@ namespace ClientesBlazorAPI.Controllers
             return Ok();
         }
 
-        //[HttpDelete("articulo")]
-        //public async Task<ActionResult> DeleteArticuloFromCliente(int articulo)
-        //{
+        [HttpDelete("articulo/{idcliente}/{idarticulo}")]
+        public async Task<ActionResult> DeleteArticuloFromCliente(int idarticulo, int idcliente)
+        {
+            var cliente = await context.TblClientes
+                .Include(a => a.TblClienteArticulos)
+                .ThenInclude(a => a.IdArticuloNavigation)
+                .FirstOrDefaultAsync(c => c.Id == idcliente);
+            if (cliente == null) return StatusCode(StatusCodes.Status400BadRequest, "Invalid parameters");
 
-        //}
+            var articulosCliente = cliente.TblClienteArticulos.Where(a => a.IdArticulo == idarticulo);
+            if (articulosCliente.Count() == 0) return StatusCode(StatusCodes.Status400BadRequest, "Invalid parameters");
+
+            context.RemoveRange(articulosCliente);
+
+            if (await context.SaveChangesAsync() == 0) return StatusCode(StatusCodes.Status400BadRequest, "Failed to remove articulo from cliente");
+
+
+            return Ok();
+        }
     }
 }
