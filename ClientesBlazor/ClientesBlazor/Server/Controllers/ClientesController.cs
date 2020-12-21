@@ -1,14 +1,14 @@
-﻿using ClientesBlazorAPI.DTOs;
+﻿using ClientesBlazor.Server.DTOs;
 using Infraestructura.Entidades;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
-namespace ClientesBlazorAPI.Controllers
+namespace ClientesBlazor.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -38,20 +38,22 @@ namespace ClientesBlazorAPI.Controllers
                 var articulosDTO = new List<ArticuloDTO>();
                 foreach (var articulo in cliente.TblClienteArticulos)
                 {
-                    var articuloDTO = new ArticuloDTO() { 
-                        Id = articulo.IdArticuloNavigation.Id, 
-                        Nombre = articulo.IdArticuloNavigation.Nombre, 
-                        Codigo = articulo.IdArticuloNavigation.Codigo, 
-                        Precio = articulo.IdArticuloNavigation.Precio 
+                    var articuloDTO = new ArticuloDTO()
+                    {
+                        Id = articulo.IdArticuloNavigation.Id,
+                        Nombre = articulo.IdArticuloNavigation.Nombre,
+                        Codigo = articulo.IdArticuloNavigation.Codigo,
+                        Precio = articulo.IdArticuloNavigation.Precio
                     };
                     articulosDTO.Add(articuloDTO);
                 }
-                var clienteDTO = new ClienteDTO() { 
-                    Id = cliente.Id, 
+                var clienteDTO = new ClienteDTO()
+                {
+                    Id = cliente.Id,
                     IdPais = cliente.IdPais,
-                    Pais = cliente.IdPaisNavigation.Nombre, 
-                    IdGrupo = cliente.IdGrupo, 
-                    Grupo = cliente.IdGrupoNavigation.Nombre, 
+                    Pais = cliente.IdPaisNavigation.Nombre,
+                    IdGrupo = cliente.IdGrupo,
+                    Grupo = cliente.IdGrupoNavigation.Nombre,
                     Nombre = cliente.Nombre,
                     Rnc = cliente.Rnc,
                     Articulos = articulosDTO
@@ -83,7 +85,7 @@ namespace ClientesBlazorAPI.Controllers
         }
 
         [HttpPost("articulos/{idcliente}")]
-        public async Task<ActionResult> AddArticulosToCliente(List<int> idArticulos,int idcliente)
+        public async Task<ActionResult> AddArticulosToCliente(List<int> idArticulos, int idcliente)
         {
             if (idArticulos == null) return StatusCode(StatusCodes.Status400BadRequest, "Invalid parameters");
             var articulos = new List<TblArticulo>();
@@ -98,10 +100,10 @@ namespace ClientesBlazorAPI.Controllers
 
             foreach (var articulo in articulos)
             {
-                cliente.TblClienteArticulos.Add(new TblClienteArticulo() { IdArticuloNavigation = articulo});
+                cliente.TblClienteArticulos.Add(new TblClienteArticulo() { IdArticuloNavigation = articulo });
             }
 
-            if(await context.SaveChangesAsync() == 0) return StatusCode(StatusCodes.Status400BadRequest, "Failed to add articulos to cliente");
+            if (await context.SaveChangesAsync() == 0) return StatusCode(StatusCodes.Status400BadRequest, "Failed to add articulos to cliente");
 
             return Ok();
         }
@@ -125,5 +127,6 @@ namespace ClientesBlazorAPI.Controllers
 
             return Ok();
         }
+
     }
 }
